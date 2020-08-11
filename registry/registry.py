@@ -129,6 +129,7 @@ def get_grant_data(data):
     file_size = data_metadata.get('file_size')
 
     return {
+        **data,
         'file': {
             'title': data['distribution'][0]['title'],
             'url': data['distribution'][0]['downloadURL'],
@@ -234,7 +235,7 @@ def get_raw_data(test=False):
     if test or "PYTEST_CURRENT_TEST" in os.environ:
         return RAW_DATA
 
-    return requests.get('http://store.data.threesixtygiving.org/reports/daily_status.json').json()
+    return requests.get('http://store.data.threesixtygiving.org/reports/daily_coverage.json').json()
 
 
 def get_data_sorted_by_prefix(raw_data):

@@ -2,10 +2,10 @@ from datetime import datetime
 import json
 import os
 
-from flask import Flask, render_template, current_app
+from flask import Flask, render_template, current_app, abort
 from raven.contrib.flask import Sentry
 
-from registry.registry import get_data_sorted_by_prefix, get_schema_org_list, get_raw_data
+from registry.registry import get_data_sorted_by_prefix, get_schema_org_list, get_raw_data, get_grant_data
 from registry.salesforce import get_salesforce_data
 
 app = Flask(
@@ -37,6 +37,25 @@ def data_registry():
         data=data,
         schema=schema,
         num_of_publishers=len(data)
+    )
+
+
+@app.route('/publisher/<string:prefix>')
+def show_publisher(prefix):
+    raw_data = get_raw_data()
+    files = [
+        get_grant_data(f)
+        for f in raw_data
+        if f.get("publisher", {}).get("prefix") == prefix
+    ]
+
+    if not files:
+        abort(404)
+
+    return render_template(
+        'publisher.html',
+        publisher=files[0]['publisher'],
+        files=files
     )
 
 

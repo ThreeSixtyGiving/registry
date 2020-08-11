@@ -1,64 +1,43 @@
 {% extends 'base.html' %}
+{% block title %}{{ publisher.name }} | Data Registry{% endblock %}
 {% block main_content %}
 
-{% include '_parts/_structured_data.html' %}
+<!-- {% include '_parts/_structured_data.html' %} -->
 
-<article class="prose-section__main">
-  <div class="prose">
-    <section class="prose__section prose__intro">
-        <p>
-          This registry lists {{ num_of_publishers }} organisations that publish data about 
-          their grants to the 360Giving Data Standard. 
-        </p>
-      <div class="box box--orange">
-        <p>
-          Looking to explore the grants data by location, sector or recipient? Head to
-          <a href="http://grantnav.threesixtygiving.org/" target="_blank">GrantNav</a>.
-        </p>
+
+<div class="base-section">
+  <hgroup class="header-group">
+    <h3 class="header-group__brow">360Giving files published by</h3>
+    <div class="grid grid--four-columns">
+      <h2 class="header-group__title grid__3">{{ publisher.name }}</h2>
+      {% if publisher.logo %}
+      <div class="grid__1">
+        <a href="{{ publisher.website }}" target="_blank">
+          <img src="{{ publisher.logo }}" alt="{{ publisher.name }}">
+        </a>
       </div>
-        <p>
-          Looking to build tools or do research with the data?
-          <a href="http://standard.threesixtygiving.org/en/latest/getdata/#registry" target="_blank">Use our JSON feed</a>.
-        </p>
-        <p>
-          Want to publish your grants data openly with the 360Giving standard? Visit our
-          <a href="https://www.threesixtygiving.org/support/" target="_blank">support page</a> or
-          <a href="http://www.threesixtygiving.org/contact/" target="_blank">get in touch</a>.
-        </p>
-    </section>
-  </div>
-</article>
+      {% endif %}
+    </div>
+  </hgroup>
+  <a href="http://grantnav.threesixtygiving.org/publisher/{{ publisher.prefix }}">
+    View this publisher on GrantNav
+  </a>
+</div>
+
 
 <ul class="card-list">
-      
-  {% if data %}
-    {% for org_prefix, pub in data.items() %}
-    <li class="card-list__item" id="{{ org_prefix }}">
+  {% for grant in files %}
+    <li class="card-list__item" id="{{ publisher.prefix }}">
       <article class="registry-card">
-        <div class="registry-card__pub-logo">
-            <a href="{{ pub.publisher.website }}" target="_blank">
-            {% if pub.publisher.logo %}
-              <img src="{{ pub.publisher.logo }}" alt="{{ pub.publisher.name }}">
-            {% endif %}
-            </a>
-        </div>
         <div class="registry-card__content">
           <h3 class="registry-card__pub-name">
-            <a href="{{ url_for('show_publisher', prefix=org_prefix) }}">
-            {{ pub.publisher.name }}
-            </a>
+            <a href="{{grant.file.accessURL}}">{{ grant.file.title }}</a>
           </h3>
           
           <ul class="registry-card__list">
 
             <li class="registry-card__item ">
               <table class="registry-grant">
-                {% for grant in pub.grant %}
-                  <tr class="registry-grant__line registry-grant--title-line">
-                    <td class="registry-grant__title" colspan="3">
-                      <a href="{{grant.file.accessURL}}">{{ grant.file.title }}</a>
-                    </td>
-                  </tr>
 
                   <tr class="registry-grant__line registry-grant--amounts-line">
                     <td class="registry-grant__pub-date">
@@ -153,8 +132,7 @@
                       {% endif %}
                       </a>
                     </td>
-                  </tr>
-                {% endfor %}  
+                  </tr> 
               </table>
             </li>
           </ul>
@@ -162,8 +140,7 @@
       </article>
 
     </li>
-    {% endfor %}
-  {% endif %}
+    {% endfor %} 
 
   </ul>
 </div>
