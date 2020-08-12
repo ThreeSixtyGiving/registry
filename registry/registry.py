@@ -59,38 +59,6 @@ def format_date(date, date_format='%b \'%y'):
         return date
 
 
-def get_total_value(data_by_currency):
-    """
-    :param data_by_currency:
-    {
-        "GBP":
-            {
-                "count": 6263,
-                "currency_symbol": "&pound;",
-                "max_amount": 3466000,
-                "min_amount": 271,
-                "total_amount": 257947904
-            },
-        "CHF":
-            {...}
-    }
-
-    :return: currency + total value (eg. '&pound; 257,947,904').
-    """
-    total_value = []
-
-    if data_by_currency:
-        for currency, data in data_by_currency.items():
-            total_amount = data.get('total_amount')
-
-            if total_amount and total_amount is not None:
-                total_value.append('{} {}'.format(
-                    get_currency_symbol(currency, data),
-                    format_value(value=total_amount, to_round=True, shorten=True)
-                ))
-    return total_value
-
-
 def get_check_cross_symbol(boolean_data):
     """
     :param boolean_data: Boolean.
@@ -120,39 +88,6 @@ def get_prefix_data(data):
             'website': data['publisher']['website'],
         },
         'grant': []
-    }
-
-
-def get_grant_data(data):
-    # TODO TEST
-    data_aggregates = data.get('datagetter_aggregates', {})
-    data_metadata = data.get('datagetter_metadata', {})
-    file_size = data_metadata.get('file_size')
-
-    return {
-        **data,
-        'file': {
-            'title': data['distribution'][0]['title'],
-            'url': data['distribution'][0]['downloadURL'],
-            'accessURL': data['distribution'][0]['accessURL'],
-            'type': get_file_type(data_metadata.get('file_type')),
-            'size': humanize.naturalsize(file_size, format='%.0f') if file_size else '-',
-            'available': data_metadata.get('downloads')
-        },
-        'licence': {
-            'name': data['license_name'],
-            'url': data['license'],
-            'acceptable': data_metadata.get('acceptable_license')
-        },
-        'total_value': get_total_value(data_aggregates.get('currencies') if data_aggregates else None),
-        'records': format_value(data_aggregates['count'] if data_aggregates else None),
-        'period': {
-            'max_award_date': data_aggregates.get('max_award_date'),
-            'first_date': format_date(data_aggregates.get('min_award_date'), '%b %Y') if data_aggregates else '',
-            'latest_date': format_date(data_aggregates.get('max_award_date'), '%b %Y') if data_aggregates else ''
-        },
-        'issued_date': format_date(data.get('issued'), '%b %Y'),
-        'valid': get_check_cross_symbol(data_metadata.get('valid')),
     }
 
 
@@ -195,7 +130,7 @@ def get_data_by_prefix(raw_data):
         if prefix not in data_by_prefix:
             data_by_prefix[prefix] = get_prefix_data(data)
 
-        data_by_prefix[prefix]['grant'].append(get_grant_data(data))
+        data_by_prefix[prefix]['grant'].append(RegistryFile(data))
 
     return data_by_prefix
 
@@ -224,14 +159,6 @@ def sort_data(data_by_prefix):
     return OrderedDict(sort_by_publisher_name)
 
 
-def format_latest_date(data_by_prefix):
-    for prefix in data_by_prefix:
-        for grant in data_by_prefix[prefix]['grant']:
-            grant['period']['latest_date'] = format_date(grant['period']['latest_date'])
-
-    return data_by_prefix
-
-
 def get_raw_data(test=False):
     if test or "PYTEST_CURRENT_TEST" in os.environ:
         return RAW_DATA
@@ -243,7 +170,7 @@ def get_data_sorted_by_prefix(raw_data):
     data_by_prefix = get_data_by_prefix(raw_data) if raw_data else None
     sorted_data = sort_data(data_by_prefix)
 
-    return format_latest_date(sorted_data)
+    return sorted_data
 
 
 def get_schema_org_list(raw_data):
@@ -388,3 +315,35 @@ class RegistryFile:
     def quality_checks(self):
         for Check in self.checks:
             yield Check(self)
+
+    def schemaorg(self, datacatalog):
+        return {
+            "@context": "https://schema.org/",
+            "@type": "Dataset",
+            "name": self.title,
+            "description": 'Data on grants made by {} published using the 360Giving Data Standard'.format(
+                self.publisher.get('name', '')
+            ),
+            "url": self.distribution[0].get('accessURL'),
+            "license": self.licence.url,
+            "creator": {
+                "@type": "Organization",
+                "url": self.publisher.get('website', ''),
+                "name": self.publisher.get('name', ''),
+            },
+            "includedInDataCatalog": {
+                "@type": "DataCatalog",
+                "name": datacatalog['name']
+            },
+            "distribution": [
+                {
+                    "@type": "DataDownload",
+                    "encodingFormat": self.metadata.get('file_type'),
+                    "contentUrl": self.distribution[0].get('downloadURL'),
+                },
+            ],
+            "temporalCoverage": "{}/{}".format(
+                self.aggregates.get('min_award_date'),
+                self.aggregates.get('max_award_date'),
+            )
+        }
