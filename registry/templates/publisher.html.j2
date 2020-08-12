@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base.html.j2' %}
 {% block title %}{{ publisher.name }} | Data Registry{% endblock %}
 {% block main_content %}
 
@@ -24,15 +24,38 @@
   </a>
 </div>
 
+<div class="grid grid--four-columns">
+
+  <div class="grid__1">
+    <div class="base-card base-card--orange">
+      <div class="base-card__content">
+        <h2 class="base-card__title">{{ files|length }}</h2>
+        <p class="base-card__text">File{% if files|length != 1 %}s{% endif %}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid__1">
+    <div class="base-card base-card--red">
+      <div class="base-card__content">
+        <h2 class="base-card__title">{{ publisher.records }}</h2>
+        <p class="base-card__text">Records</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="spacer-5"></div>
+
 
 <ul class="card-list">
   {% for grant in files %}
     <li class="card-list__item" id="{{ publisher.prefix }}">
       <article class="registry-card">
         <div class="registry-card__content">
-          <h3 class="registry-card__pub-name">
-            <a href="{{grant.file.accessURL}}">{{ grant.file.title }}</a>
-          </h3>
+          <h2 class="h2">{{ grant.file.title }}</h2>
+          <a href="{{grant.file.accessURL}}">Information about this file</a>
           
           <ul class="registry-card__list">
 
@@ -135,6 +158,28 @@
                   </tr> 
               </table>
             </li>
+            {% for check in grant.quality_checks() %}
+              {% if check.visible %}
+              <li class="registry-card__item ">
+                <div>
+                  <h3 class="h3" style="
+                    {% if check.valid=='info' %}
+                    {% elif check.valid %}color:rgb(77, 172, 182);
+                    {% else %}color:rgb(188, 44, 38);
+                    {% endif %}">
+                    <i class="material-icons">
+                    {% if check.valid=='info' %}info
+                    {% elif check.valid %}check_circle
+                    {% else %}cancel
+                    {% endif %}
+                    </i>
+                    {{ check.title }}
+                  </h3>
+                  <p>{{ check.description }}</p>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
           </ul>
         </div>
       </article>

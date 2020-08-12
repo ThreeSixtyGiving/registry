@@ -8,6 +8,7 @@ import humanize
 import requests
 
 from tests.samples.registry_raw_data import RAW_DATA
+from registry.quality_checks import CurrencyCheck, BasicDetailsCheck, OrganisationIdentifiersCheck, GrantProgrammeCheck, BeneficiaryGeographyCheck, RecipientGeographyCheck, PlannedDatesCheck
 
 
 def get_currency_symbol(currency, data):
@@ -292,3 +293,99 @@ def get_schema_org_list(raw_data):
         for d in raw_data
     ]
     return schemaorg
+
+
+class RegistryFile:
+
+    checks = [
+        CurrencyCheck,
+        BasicDetailsCheck,
+        GrantProgrammeCheck,
+        BeneficiaryGeographyCheck,
+        RecipientGeographyCheck,
+        PlannedDatesCheck,
+        OrganisationIdentifiersCheck,
+    ]
+
+    def __init__(self, data):
+        self.aggregates = data.get("datagetter_aggregates", {})
+        self.metadata = data.get("datagetter_metadata", {})
+        self.coverage = data.get("datagetter_coverage", {})
+        self.description = data.get("description")
+        self.distribution = data.get("distribution", [])
+        self.identifier = data.get("identifier")
+        self.issued = datetime.strptime(data.get("issued"), '%Y-%m-%d')
+        self.licence = {
+            'url': data.get('license'),
+            'name': data.get('license_name'),
+            'acceptable': self.metadata.get('acceptable_license')
+        }
+        self.modified = datetime.strptime(data.get("modified"), "%Y-%m-%dT%H:%M:%S.%f%z")
+        self.publisher = data.get("publisher", {})
+        self.title = data.get("title")
+
+    @property
+    def file(self):
+        return {
+            'title': self.distribution[0]['title'],
+            'url': self.distribution[0]['downloadURL'],
+            'accessURL': self.distribution[0]['accessURL'],
+            'type': get_file_type(self.metadata.get('file_type')),
+            'size': humanize.naturalsize(self.metadata.get('file_size'), format='%.0f') if self.metadata.get('file_type') else '-',
+            'available': self.metadata.get('downloads')
+        }
+
+    @property
+    def total_value(self):
+        """
+        :param data_by_currency:
+        {
+            "GBP":
+                {
+                    "count": 6263,
+                    "currency_symbol": "&pound;",
+                    "max_amount": 3466000,
+                    "min_amount": 271,
+                    "total_amount": 257947904
+                },
+            "CHF":
+                {...}
+        }
+
+        :return: currency + total value (eg. '&pound; 257,947,904').
+        """
+        total_value = []
+
+        if self.aggregates.get('currencies'):
+            for currency, data in self.aggregates.get('currencies').items():
+                total_amount = data.get('total_amount')
+
+                if total_amount and total_amount is not None:
+                    total_value.append('{} {}'.format(
+                        get_currency_symbol(currency, data),
+                        format_value(value=total_amount, to_round=True, shorten=True)
+                    ))
+        return total_value
+
+    @property
+    def records(self):
+        if self.aggregates.get("count"):
+            return format_value(self.aggregates.get("count"))
+        return None
+
+    @property
+    def period(self):
+        return {
+            'max_award_date': self.aggregates.get('max_award_date'),
+            'first_date': format_date(self.aggregates.get('min_award_date'), '%b %Y') if self.aggregates else '',
+            'latest_date': format_date(self.aggregates.get('max_award_date'), '%b %Y') if self.aggregates else ''
+        }
+
+    @property
+    def valid(self):
+        return get_check_cross_symbol(self.metadata.get('valid'))
+
+    def quality_checks(self):
+        for Check in self.checks:
+            print(Check)
+            yield Check(self)
