@@ -141,7 +141,7 @@ class OrganisationIdentifiersCheck(QualityCheck):
         for count in self.file.aggregates.get('recipient_org_identifiers_unrecognised_prefixes', {}).values():
             self.invalid_ids += count
 
-        self.valid_ids_pc = self.external_ids / (self.invalid_ids + self.invalid_ids + self.external_ids)
+        self.valid_ids_pc = self.external_ids / (self.invalid_ids + self.internal_ids + self.external_ids)
 
     @property
     def title(self):

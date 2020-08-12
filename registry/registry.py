@@ -387,5 +387,4 @@ class RegistryFile:
 
     def quality_checks(self):
         for Check in self.checks:
-            print(Check)
             yield Check(self)

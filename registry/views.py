@@ -55,8 +55,8 @@ def show_publisher(prefix):
     publisher = files[0].publisher
     publisher['records'] = 0
     for f in files:
-        if f.records:
-            publisher['records'] += int(f.records)
+        if f.aggregates.get("count"):
+            publisher['records'] += f.aggregates.get("count", 0)
 
     return render_template(
         'publisher.html.j2',
