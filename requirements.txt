@@ -1,4 +1,4 @@
-Flask==1.1.1
+Flask==1.1.2
 humanize==1.0.0
 raven==6.10.0
 requests==2.22.0

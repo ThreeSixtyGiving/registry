@@ -1,5 +1,4 @@
 class QualityCheck:
-
     def __init__(self, file_):
         self.file = file_
 
@@ -40,11 +39,14 @@ class CurrencyCheck(QualityCheck):
 
     @property
     def visible(self):
-        return 'GBP' not in self.file.aggregates['currencies'] or len(self.file.aggregates['currencies']) > 1
+        return (
+            "GBP" not in self.file.aggregates["currencies"]
+            or len(self.file.aggregates["currencies"]) > 1
+        )
 
     @property
     def valid(self):
-        return 'info'
+        return "info"
 
 
 class BasicDetailsCheck(QualityCheck):
@@ -53,7 +55,6 @@ class BasicDetailsCheck(QualityCheck):
 
 
 class GrantProgrammeCheck(QualityCheck):
-
     @property
     def title(self):
         return "Includes grant programme" if self.valid else "Missing grant programme"
@@ -66,14 +67,17 @@ class GrantProgrammeCheck(QualityCheck):
 
     @property
     def valid(self):
-        return '/grants/grantProgramme' in self.file.coverage
+        return "/grants/grantProgramme" in self.file.coverage
 
 
 class BeneficiaryGeographyCheck(QualityCheck):
-
     @property
     def title(self):
-        return "Includes beneficiary geography" if self.valid else "Missing beneficiary geography"
+        return (
+            "Includes beneficiary geography"
+            if self.valid
+            else "Missing beneficiary geography"
+        )
 
     @property
     def description(self):
@@ -83,32 +87,42 @@ class BeneficiaryGeographyCheck(QualityCheck):
 
     @property
     def valid(self):
-        return '/grants/beneficiaryLocation' in self.file.coverage
+        return "/grants/beneficiaryLocation" in self.file.coverage
 
 
 class RecipientGeographyCheck(QualityCheck):
-
     @property
     def title(self):
-        return "Includes recipient geography" if self.valid else "Missing recipient geography"
+        return (
+            "Includes recipient geography"
+            if self.valid
+            else "Missing recipient geography"
+        )
 
     @property
     def description(self):
         if self.valid:
             return "Contains data about the location of the grant recipient."
-        return "This file does not contain data about the location of the grant recipient."
+        return (
+            "This file does not contain data about the location of the grant recipient."
+        )
 
     @property
     def valid(self):
-        return '/grants/recipientOrganization/postalCode' in self.file.coverage or \
-            '/grants/recipientOrganization/location' in self.file.coverage
+        return (
+            "/grants/recipientOrganization/postalCode" in self.file.coverage
+            or "/grants/recipientOrganization/location" in self.file.coverage
+        )
 
 
 class PlannedDatesCheck(QualityCheck):
-
     @property
     def title(self):
-        return "Includes planned or actual dates" if self.valid else "Missing planned or actual dates"
+        return (
+            "Includes planned or actual dates"
+            if self.valid
+            else "Missing planned or actual dates"
+        )
 
     @property
     def description(self):
@@ -118,8 +132,10 @@ class PlannedDatesCheck(QualityCheck):
 
     @property
     def valid(self):
-        return '/grants/plannedDates' in self.file.coverage or \
-            '/grants/actualDates' in self.file.coverage
+        return (
+            "/grants/plannedDates" in self.file.coverage
+            or "/grants/actualDates" in self.file.coverage
+        )
 
 
 class OrganisationIdentifiersCheck(QualityCheck):
@@ -131,26 +147,38 @@ class OrganisationIdentifiersCheck(QualityCheck):
 
         self.external_ids = 0  # count of records using a valid internal identifier
         self.internal_ids = 0  # count of records using a non-external identifier
-        self.invalid_ids = 0   # count of records with an invalid identifier
+        self.invalid_ids = 0  # count of records with an invalid identifier
 
-        for prefix, count in self.file.aggregates.get('recipient_org_identifier_prefixes', {}).items():
-            if prefix == '360G':
+        for prefix, count in self.file.aggregates.get(
+            "recipient_org_identifier_prefixes", {}
+        ).items():
+            if prefix == "360G":
                 self.internal_ids += count
             else:
                 self.external_ids += count
 
-        for count in self.file.aggregates.get('recipient_org_identifiers_unrecognised_prefixes', {}).values():
+        for count in self.file.aggregates.get(
+            "recipient_org_identifiers_unrecognised_prefixes", {}
+        ).values():
             self.invalid_ids += count
 
-        self.valid_ids_pc = self.external_ids / (self.invalid_ids + self.internal_ids + self.external_ids)
+        self.valid_ids_pc = self.external_ids / (
+            self.invalid_ids + self.internal_ids + self.external_ids
+        )
 
     @property
     def title(self):
-        return "Includes organisation identifiers" if self.valid else "Missing organisation identifiers"
+        return (
+            "Includes organisation identifiers"
+            if self.valid
+            else "Missing organisation identifiers"
+        )
 
     @property
     def description(self):
-        return "{:,.0f}% of records contain a useful organisation identifier.".format(self.valid_ids_pc * 100)
+        return "{:,.0f}% of records contain a useful organisation identifier.".format(
+            self.valid_ids_pc * 100
+        )
 
     @property
     def valid(self):

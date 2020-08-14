@@ -1,4 +1,4 @@
-Flask==1.1.1
+Flask==1.1.2
 humanize==1.0.0
 raven==6.10.0
 requests==2.22.0
@@ -8,6 +8,8 @@ pytest==5.3.5
 pytest-flask==0.15.1
 selenium==3.141.0
 flake8==3.7.9
+black==19.10b0
+isort==5.4.1
 ## The following requirements were added by pip freeze:
 attrs==19.3.0
 blinker==1.4

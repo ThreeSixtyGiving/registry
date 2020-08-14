@@ -1,8 +1,9 @@
 import os
 
-from registry.registry import (get_currency_symbol, format_value, format_date,
-                               get_check_cross_symbol, get_file_type, get_data_by_prefix, sort_data,
-                               get_data_sorted_by_prefix, get_raw_data, RegistryFile)
+from registry.registry import (RegistryFile, format_date, format_value,
+                               get_check_cross_symbol, get_currency_symbol,
+                               get_data_by_prefix, get_data_sorted_by_prefix,
+                               get_file_type, get_raw_data, sort_data)
 from tests.samples.registry_scvo_data import SCVO_DATA
 
 os.environ['FLASK_ENV'] = 'development'

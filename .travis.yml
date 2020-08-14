@@ -14,3 +14,5 @@ install:
 script:
     - "flake8 ."
     - "python -m pytest"
+    - "isort --profile black --check-only ./"
+    - "black --check ./"

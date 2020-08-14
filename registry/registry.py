@@ -1,14 +1,21 @@
+import os
 from collections import OrderedDict
 from datetime import datetime
-import os
-
-from flask import url_for
 
 import humanize
 import requests
+from flask import url_for
 
+from registry.quality_checks import (
+    BasicDetailsCheck,
+    BeneficiaryGeographyCheck,
+    CurrencyCheck,
+    GrantProgrammeCheck,
+    OrganisationIdentifiersCheck,
+    PlannedDatesCheck,
+    RecipientGeographyCheck,
+)
 from tests.samples.registry_raw_data import RAW_DATA
-from registry.quality_checks import CurrencyCheck, BasicDetailsCheck, OrganisationIdentifiersCheck, GrantProgrammeCheck, BeneficiaryGeographyCheck, RecipientGeographyCheck, PlannedDatesCheck
 
 
 def get_currency_symbol(currency, data):
@@ -23,9 +30,9 @@ def get_currency_symbol(currency, data):
         "total_amount": 257947904
     }
     """
-    if not data.get('currency_symbol'):
+    if not data.get("currency_symbol"):
         return currency
-    return data['currency_symbol']
+    return data["currency_symbol"]
 
 
 def format_value(value, to_round=False, shorten=False):
@@ -43,18 +50,18 @@ def format_value(value, to_round=False, shorten=False):
             if to_round:
                 value = round(value)
             else:
-                value = float(format(value, '.2f'))
+                value = float(format(value, ".2f"))
         return "{:,}".format(value)
     return value
 
 
-def format_date(date, date_format='%b \'%y'):
+def format_date(date, date_format="%b '%y"):
     """
     :param date: string (yyyy-mm-dd)
     :return: string (eg. Jun '18)
     """
     try:
-        return datetime.strptime(date, '%Y-%m-%d').strftime(date_format)
+        return datetime.strptime(date, "%Y-%m-%d").strftime(date_format)
     except ValueError:
         return date
 
@@ -65,29 +72,29 @@ def get_check_cross_symbol(boolean_data):
     :return: 'tick' if true, 'cross' if False else ''.
     """
     if boolean_data is True:
-        return '&#x2713;'
+        return "&#x2713;"
     if boolean_data is False:
-        return '&#x2715;'
-    return ''
+        return "&#x2715;"
+    return ""
 
 
 def get_file_type(file_type):
     file_types = {
-        'csv': 'CSV',
-        'json': 'json',
-        'xlsx': 'Excel',
+        "csv": "CSV",
+        "json": "json",
+        "xlsx": "Excel",
     }
-    return file_types.get(file_type, 'file')
+    return file_types.get(file_type, "file")
 
 
 def get_prefix_data(data):
     return {
-        'publisher': {
-            'name': data['publisher']['name'],
-            'logo': data['publisher']['logo'],
-            'website': data['publisher']['website'],
+        "publisher": {
+            "name": data["publisher"]["name"],
+            "logo": data["publisher"]["logo"],
+            "website": data["publisher"]["website"],
         },
-        'grant': []
+        "grant": [],
     }
 
 
@@ -125,12 +132,12 @@ def get_data_by_prefix(raw_data):
     data_by_prefix = {}
 
     for data in raw_data:
-        prefix = data['publisher']['prefix']
+        prefix = data["publisher"]["prefix"]
 
         if prefix not in data_by_prefix:
             data_by_prefix[prefix] = get_prefix_data(data)
 
-        data_by_prefix[prefix]['grant'].append(RegistryFile(data))
+        data_by_prefix[prefix]["grant"].append(RegistryFile(data))
 
     return data_by_prefix
 
@@ -142,14 +149,16 @@ def sort_data(data_by_prefix):
     for prefix in data_by_prefix:
         try:
             sort_by_grant_latest_date = sorted(
-                data_by_prefix[prefix]['grant'], key=lambda x: x.period['max_award_date'], reverse=True
+                data_by_prefix[prefix]["grant"],
+                key=lambda x: x.period["max_award_date"],
+                reverse=True,
             )
-            data_by_prefix[prefix]['grant'] = sort_by_grant_latest_date
+            data_by_prefix[prefix]["grant"] = sort_by_grant_latest_date
         except TypeError:
             pass
 
     def get_publisher_name(datarow):
-        name = datarow[1]['publisher']['name'].casefold()
+        name = datarow[1]["publisher"]["name"].casefold()
         if name.lower().startswith("the "):
             return name[4:]
         return name
@@ -163,7 +172,9 @@ def get_raw_data(test=False):
     if test or "PYTEST_CURRENT_TEST" in os.environ:
         return RAW_DATA
 
-    return requests.get('http://store.data.threesixtygiving.org/reports/daily_coverage.json').json()
+    return requests.get(
+        "http://store.data.threesixtygiving.org/reports/daily_coverage.json"
+    ).json()
 
 
 def get_data_sorted_by_prefix(raw_data):
@@ -178,44 +189,44 @@ def get_schema_org_list(raw_data):
         "@context": "https://schema.org/",
         "@type": "DataCatalog",
         "name": "360Giving Data Registry",
-        "url": url_for('data_registry', _external=True),
+        "url": url_for("data_registry", _external=True),
         "description": "A registry of data about grants made, published using the 360Giving Data Standard",
         "maintainer": {
             "@type": "Organization",
             "url": "https://www.threesixtygiving.org/",
             "name": "360Giving",
-        }
+        },
     }
     schemaorg = [datacatalog] + [
         {
             "@context": "https://schema.org/",
             "@type": "Dataset",
-            "name": d.get('title', ''),
-            "description": 'Data on grants made by {} published using the 360Giving Data Standard'.format(
-                d.get("publisher", {}).get('name', '')
+            "name": d.get("title", ""),
+            "description": "Data on grants made by {} published using the 360Giving Data Standard".format(
+                d.get("publisher", {}).get("name", "")
             ),
-            "url": d.get('distribution', [{}])[0].get('accessURL'),
-            "license": d.get('license', ''),
+            "url": d.get("distribution", [{}])[0].get("accessURL"),
+            "license": d.get("license", ""),
             "creator": {
                 "@type": "Organization",
-                "url": d.get("publisher", {}).get('website', ''),
-                "name": d.get("publisher", {}).get('name', ''),
+                "url": d.get("publisher", {}).get("website", ""),
+                "name": d.get("publisher", {}).get("name", ""),
             },
             "includedInDataCatalog": {
                 "@type": "DataCatalog",
-                "name": datacatalog['name']
+                "name": datacatalog["name"],
             },
             "distribution": [
                 {
                     "@type": "DataDownload",
-                    "encodingFormat": d.get("datagetter_metadata", {}).get('file_type'),
-                    "contentUrl": d.get('distribution', [{}])[0].get('downloadURL'),
+                    "encodingFormat": d.get("datagetter_metadata", {}).get("file_type"),
+                    "contentUrl": d.get("distribution", [{}])[0].get("downloadURL"),
                 },
             ],
             "temporalCoverage": "{}/{}".format(
-                d.get("datagetter_aggregates", {}).get('min_award_date'),
-                d.get("datagetter_aggregates", {}).get('max_award_date'),
-            )
+                d.get("datagetter_aggregates", {}).get("min_award_date"),
+                d.get("datagetter_aggregates", {}).get("max_award_date"),
+            ),
         }
         for d in raw_data
     ]
@@ -242,16 +253,18 @@ class RegistryFile:
         self.distribution = data.get("distribution", [])
         self.identifier = data.get("identifier")
         if data.get("issued"):
-            self.issued = datetime.strptime(data.get("issued"), '%Y-%m-%d')
+            self.issued = datetime.strptime(data.get("issued"), "%Y-%m-%d")
         else:
             self.issued = None
         self.licence = {
-            'url': data.get('license'),
-            'name': data.get('license_name'),
-            'acceptable': self.metadata.get('acceptable_license')
+            "url": data.get("license"),
+            "name": data.get("license_name"),
+            "acceptable": self.metadata.get("acceptable_license"),
         }
         if data.get("modified"):
-            self.modified = datetime.strptime(data.get("modified"), "%Y-%m-%dT%H:%M:%S.%f%z")
+            self.modified = datetime.strptime(
+                data.get("modified"), "%Y-%m-%dT%H:%M:%S.%f%z"
+            )
         else:
             self.modified = None
         self.publisher = data.get("publisher", {})
@@ -260,12 +273,14 @@ class RegistryFile:
     @property
     def file(self):
         return {
-            'title': self.distribution[0]['title'],
-            'url': self.distribution[0]['downloadURL'],
-            'accessURL': self.distribution[0]['accessURL'],
-            'type': get_file_type(self.metadata.get('file_type')),
-            'size': humanize.naturalsize(self.metadata.get('file_size'), format='%.0f') if self.metadata.get('file_type') else '-',
-            'available': self.metadata.get('downloads')
+            "title": self.distribution[0]["title"],
+            "url": self.distribution[0]["downloadURL"],
+            "accessURL": self.distribution[0]["accessURL"],
+            "type": get_file_type(self.metadata.get("file_type")),
+            "size": humanize.naturalsize(self.metadata.get("file_size"), format="%.0f")
+            if self.metadata.get("file_type")
+            else "-",
+            "available": self.metadata.get("downloads"),
         }
 
     @property
@@ -289,15 +304,19 @@ class RegistryFile:
         """
         total_value = []
 
-        if self.aggregates.get('currencies'):
-            for currency, data in self.aggregates.get('currencies').items():
-                total_amount = data.get('total_amount')
+        if self.aggregates.get("currencies"):
+            for currency, data in self.aggregates.get("currencies").items():
+                total_amount = data.get("total_amount")
 
                 if total_amount and total_amount is not None:
-                    total_value.append('{} {}'.format(
-                        get_currency_symbol(currency, data),
-                        format_value(value=total_amount, to_round=True, shorten=True)
-                    ))
+                    total_value.append(
+                        "{} {}".format(
+                            get_currency_symbol(currency, data),
+                            format_value(
+                                value=total_amount, to_round=True, shorten=True
+                            ),
+                        )
+                    )
         return total_value
 
     @property
@@ -309,14 +328,18 @@ class RegistryFile:
     @property
     def period(self):
         return {
-            'max_award_date': self.aggregates.get('max_award_date'),
-            'first_date': format_date(self.aggregates.get('min_award_date'), '%b %Y') if self.aggregates else '',
-            'latest_date': format_date(self.aggregates.get('max_award_date'), '%b %Y') if self.aggregates else ''
+            "max_award_date": self.aggregates.get("max_award_date"),
+            "first_date": format_date(self.aggregates.get("min_award_date"), "%b %Y")
+            if self.aggregates
+            else "",
+            "latest_date": format_date(self.aggregates.get("max_award_date"), "%b %Y")
+            if self.aggregates
+            else "",
         }
 
     @property
     def valid(self):
-        return get_check_cross_symbol(self.metadata.get('valid'))
+        return get_check_cross_symbol(self.metadata.get("valid"))
 
     def quality_checks(self):
         for Check in self.checks:
@@ -327,29 +350,26 @@ class RegistryFile:
             "@context": "https://schema.org/",
             "@type": "Dataset",
             "name": self.title,
-            "description": 'Data on grants made by {} published using the 360Giving Data Standard'.format(
-                self.publisher.get('name', '')
+            "description": "Data on grants made by {} published using the 360Giving Data Standard".format(
+                self.publisher.get("name", "")
             ),
-            "url": self.distribution[0].get('accessURL'),
-            "license": self.licence.get('url', ''),
+            "url": self.distribution[0].get("accessURL"),
+            "license": self.licence.get("url", ""),
             "creator": {
                 "@type": "Organization",
-                "url": self.publisher.get('website', ''),
-                "name": self.publisher.get('name', ''),
+                "url": self.publisher.get("website", ""),
+                "name": self.publisher.get("name", ""),
             },
-            "includedInDataCatalog": {
-                "@type": "DataCatalog",
-                "name": datacatalog_name
-            },
+            "includedInDataCatalog": {"@type": "DataCatalog", "name": datacatalog_name},
             "distribution": [
                 {
                     "@type": "DataDownload",
-                    "encodingFormat": self.metadata.get('file_type'),
-                    "contentUrl": self.distribution[0].get('downloadURL'),
+                    "encodingFormat": self.metadata.get("file_type"),
+                    "contentUrl": self.distribution[0].get("downloadURL"),
                 },
             ],
             "temporalCoverage": "{}/{}".format(
-                self.aggregates.get('min_award_date'),
-                self.aggregates.get('max_award_date'),
-            )
+                self.aggregates.get("min_award_date"),
+                self.aggregates.get("max_award_date"),
+            ),
         }

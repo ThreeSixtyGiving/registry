@@ -1,6 +1,9 @@
-from registry.quality_checks import (CurrencyCheck, GrantProgrammeCheck, OrganisationIdentifiersCheck,
-                                     PlannedDatesCheck, RecipientGeographyCheck, BasicDetailsCheck,
-                                     BeneficiaryGeographyCheck)
+from registry.quality_checks import (BasicDetailsCheck,
+                                     BeneficiaryGeographyCheck, CurrencyCheck,
+                                     GrantProgrammeCheck,
+                                     OrganisationIdentifiersCheck,
+                                     PlannedDatesCheck,
+                                     RecipientGeographyCheck)
 from registry.registry import RegistryFile
 
 

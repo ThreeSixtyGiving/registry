@@ -1,4 +1,4 @@
-from registry.salesforce import clean_output, clean_object
+from registry.salesforce import clean_object, clean_output
 from tests.samples.salesforce import API_OUTPUT, LICENSE_OBJECT
 
 
