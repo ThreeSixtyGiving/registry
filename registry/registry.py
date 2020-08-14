@@ -142,7 +142,7 @@ def sort_data(data_by_prefix):
     for prefix in data_by_prefix:
         try:
             sort_by_grant_latest_date = sorted(
-                data_by_prefix[prefix]['grant'], key=lambda x: x['period']['max_award_date'], reverse=True
+                data_by_prefix[prefix]['grant'], key=lambda x: x.period['max_award_date'], reverse=True
             )
             data_by_prefix[prefix]['grant'] = sort_by_grant_latest_date
         except TypeError:
@@ -241,13 +241,19 @@ class RegistryFile:
         self.description = data.get("description")
         self.distribution = data.get("distribution", [])
         self.identifier = data.get("identifier")
-        self.issued = datetime.strptime(data.get("issued"), '%Y-%m-%d')
+        if data.get("issued"):
+            self.issued = datetime.strptime(data.get("issued"), '%Y-%m-%d')
+        else:
+            self.issued = None
         self.licence = {
             'url': data.get('license'),
             'name': data.get('license_name'),
             'acceptable': self.metadata.get('acceptable_license')
         }
-        self.modified = datetime.strptime(data.get("modified"), "%Y-%m-%dT%H:%M:%S.%f%z")
+        if data.get("modified"):
+            self.modified = datetime.strptime(data.get("modified"), "%Y-%m-%dT%H:%M:%S.%f%z")
+        else:
+            self.modified = None
         self.publisher = data.get("publisher", {})
         self.title = data.get("title")
 
@@ -316,7 +322,7 @@ class RegistryFile:
         for Check in self.checks:
             yield Check(self)
 
-    def schemaorg(self, datacatalog):
+    def schemaorg(self, datacatalog_name):
         return {
             "@context": "https://schema.org/",
             "@type": "Dataset",
@@ -325,7 +331,7 @@ class RegistryFile:
                 self.publisher.get('name', '')
             ),
             "url": self.distribution[0].get('accessURL'),
-            "license": self.licence.url,
+            "license": self.licence.get('url', ''),
             "creator": {
                 "@type": "Organization",
                 "url": self.publisher.get('website', ''),
@@ -333,7 +339,7 @@ class RegistryFile:
             },
             "includedInDataCatalog": {
                 "@type": "DataCatalog",
-                "name": datacatalog['name']
+                "name": datacatalog_name
             },
             "distribution": [
                 {

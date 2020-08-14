@@ -1,7 +1,8 @@
 import os
 
-from registry.registry import get_currency_symbol, format_value, format_date, get_total_value,\
-    get_check_cross_symbol, get_file_type, get_data_by_prefix, sort_data, get_data_sorted_by_prefix, get_raw_data
+from registry.registry import (get_currency_symbol, format_value, format_date,
+                               get_check_cross_symbol, get_file_type, get_data_by_prefix, sort_data,
+                               get_data_sorted_by_prefix, get_raw_data, RegistryFile)
 from tests.samples.registry_scvo_data import SCVO_DATA
 
 os.environ['FLASK_ENV'] = 'development'
@@ -74,55 +75,92 @@ def test_format_date_wrong_date_param():
 
 
 def test_get_total_value_one_currency():
-    response = get_total_value({'GBP': {'currency_symbol': '&pound;', 'total_amount': 257947}})
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {
+                'GBP': {
+                    'currency_symbol': '&pound;',
+                    'total_amount': 257947
+                }
+            }
+        }
+    })
+    response = r.total_value
 
     assert response == ['&pound; 257,947']
 
 
 def test_get_total_value_multiple_currencies():
-    data_by_currency = {
-        'GBP': {'currency_symbol': '&pound;', 'total_amount': 257947},
-        'CHP': {'currency_symbol': '', 'total_amount': 234.898000}
-    }
-    response = get_total_value(data_by_currency)
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {
+                'GBP': {'currency_symbol': '&pound;', 'total_amount': 257947},
+                'CHP': {'currency_symbol': '', 'total_amount': 234.898000}
+            }
+        }
+    })
+    response = r.total_value
 
     assert response == ['&pound; 257,947', 'CHP 235']
 
 
 def test_get_total_value_empty_dict():
-    response = get_total_value({})
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {}
+        }
+    })
+    response = r.total_value
 
     assert response == []
 
 
 def test_get_total_value_currency_symbol_key_missing():
-    response = get_total_value({'GBP': {'total_amount': 257947}})
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {'GBP': {'total_amount': 257947}}
+        }
+    })
+    response = r.total_value
 
     assert response == ['GBP 257,947']
 
 
 def test_get_total_value_total_amount_key_missing():
-    data_by_currency = {
-        'GBP': {'currency_symbol': '&pound;'},
-        'CHP': {'currency_symbol': '', 'total_amount': 234.898000}
-    }
-    response = get_total_value(data_by_currency)
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {
+                'GBP': {'currency_symbol': '&pound;'},
+                'CHP': {'currency_symbol': '', 'total_amount': 234.898000}
+            }
+        }
+    })
+    response = r.total_value
 
     assert response == ['CHP 235']
 
 
 def test_get_total_value_total_amount_empty_string():
-    data_by_currency = {
-        'GBP': {'currency_symbol': '&pound;', 'total_amount': 257947},
-        'CHP': {'currency_symbol': '', 'total_amount': ''}
-    }
-    response = get_total_value(data_by_currency)
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {
+                'GBP': {'currency_symbol': '&pound;', 'total_amount': 257947},
+                'CHP': {'currency_symbol': '', 'total_amount': ''}
+            }
+        }
+    })
+    response = r.total_value
 
     assert response == ['&pound; 257,947']
 
 
 def test_get_total_value_rounded_value():
-    response = get_total_value({'GBP': {'total_amount': 257947.49}})
+    r = RegistryFile({
+        'datagetter_aggregates': {
+            'currencies': {'GBP': {'total_amount': 257947.49}}
+        }
+    })
+    response = r.total_value
 
     assert response == ['GBP 257,947']
 
@@ -251,8 +289,8 @@ def test_max_award_date_correct_format():
     data = get_data_sorted_by_prefix(raw_data)
     grants_blf = data['360G-blf']['grant']
 
-    assert grants_blf[0]['period']['latest_date'] == "Mar 2018"
-    assert grants_blf[1]['period']['latest_date'] == "Mar 2017"
+    assert grants_blf[0].period['latest_date'] == "Mar 2018"
+    assert grants_blf[1].period['latest_date'] == "Mar 2017"
 
 
 def test_publisher_data_is_sorted_by_max_award_date():
@@ -261,7 +299,74 @@ def test_publisher_data_is_sorted_by_max_award_date():
     grants = sorted_data['360G-SCVO']['grant']
 
     assert len(grants) == 4
-    assert grants[0]['period']['latest_date'] == "May 2019"
-    assert grants[1]['period']['latest_date'] == "Dec 2018"
-    assert grants[2]['period']['latest_date'] == "Nov 2018"
-    assert grants[3]['period']['latest_date'] == "Aug 2018"
+    assert grants[0].period['latest_date'] == "May 2019"
+    assert grants[1].period['latest_date'] == "Dec 2018"
+    assert grants[2].period['latest_date'] == "Nov 2018"
+    assert grants[3].period['latest_date'] == "Aug 2018"
+
+
+def test_registryfile_class():
+    """
+    Load the data as a registry file without causing an error
+    """
+    for d in SCVO_DATA:
+        _ = RegistryFile(d)
+
+
+def test_registryfile_file():
+    r = RegistryFile(SCVO_DATA[0])
+    assert r.file['title'] == 'SCVO Community Capacity & Resilience Fund grants'
+    assert r.file['url'] == 'https://scvo.org/running-your-organisation/funding/community-capacity-resilience-fund/projects/data.json'
+    assert r.file['accessURL'] == 'https://scvo.org/transparency-open-data'
+    assert r.file['type'] == 'json'
+    assert r.file['size'] == '966 kB'
+    assert r.file['available'] is True
+
+
+def test_registryfile_records():
+    r = RegistryFile(SCVO_DATA[0])
+    assert r.records == '191'
+
+    r.aggregates['count'] = 11234
+    assert r.records == '11,234'
+
+
+def test_registryfile_vaild():
+    r = RegistryFile(SCVO_DATA[0])
+    r.metadata['valid'] = True
+    assert r.valid == '&#x2713;'
+
+    r.metadata['valid'] = False
+    assert r.valid == '&#x2715;'
+
+
+def test_registryfile_schemaorg():
+    datacatalog_name = 'test_datacatalog'
+    r = RegistryFile(SCVO_DATA[0])
+    s = r.schemaorg(datacatalog_name)
+
+    assert s == {
+        "@context": "https://schema.org/",
+        "@type": "Dataset",
+        "name": "SCVO Community Capacity & Resilience Fund grants",
+        "description": 'Data on grants made by Scottish Council for Voluntary Organisations published using the 360Giving Data Standard',
+        "url": "https://scvo.org/transparency-open-data",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "creator": {
+            "@type": "Organization",
+            "url": "http://scvo.org",
+            "name": 'Scottish Council for Voluntary Organisations',
+        },
+        "includedInDataCatalog": {
+            "@type": "DataCatalog",
+            "name": datacatalog_name
+        },
+        "distribution": [
+            {
+                "@type": "DataDownload",
+                "encodingFormat": "json",
+                "contentUrl": "https://scvo.org/running-your-organisation/funding/community-capacity-resilience-fund/projects/data.json",
+            },
+        ],
+        "temporalCoverage": "2015-07-03/2018-11-02"
+    }

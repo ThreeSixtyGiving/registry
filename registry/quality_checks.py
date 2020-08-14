@@ -100,7 +100,8 @@ class RecipientGeographyCheck(QualityCheck):
 
     @property
     def valid(self):
-        return '/grants/recipientOrganization/postalCode' in self.file.coverage
+        return '/grants/recipientOrganization/postalCode' in self.file.coverage or \
+            '/grants/recipientOrganization/location' in self.file.coverage
 
 
 class PlannedDatesCheck(QualityCheck):
