@@ -12,7 +12,7 @@ install:
 
 
 script:
-    - "flake8 ."
+    - "flake8 --extend-ignore=W503 ."
     - "python -m pytest"
     - "isort --profile black --check-only ./"
     - "black --check ./"
