@@ -34,7 +34,7 @@ def test_currency_check_non_gbp():
 def test_currency_check_multiple():
     c = CurrencyCheck(
         RegistryFile(
-            {"datagetter_aggregates": {"currencies": {"EUR": 100, "GBP": 1200,}}}
+            {"datagetter_aggregates": {"currencies": {"EUR": 100, "GBP": 1200}}}
         )
     )
     assert c.visible is True
@@ -43,7 +43,7 @@ def test_currency_check_multiple():
 def test_currency_check_multiple_non_gbp():
     c = CurrencyCheck(
         RegistryFile(
-            {"datagetter_aggregates": {"currencies": {"EUR": 100, "USD": 1200,}}}
+            {"datagetter_aggregates": {"currencies": {"EUR": 100, "USD": 1200}}}
         )
     )
     assert c.visible is True

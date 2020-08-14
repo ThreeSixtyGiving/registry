@@ -116,7 +116,7 @@ def test_table_logos(browser):
 
 
 @pytest.mark.usefixtures("live_server")
-@pytest.mark.parametrize("link_text", ["Terms & Conditions", "Take Down Policy",])
+@pytest.mark.parametrize("link_text", ["Terms & Conditions", "Take Down Policy"])
 def test_footer_links(browser, link_text):
     browser.get(url_for("data_registry", _external=True))
     browser.find_element_by_link_text(link_text)
