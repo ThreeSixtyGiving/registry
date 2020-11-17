@@ -44,7 +44,7 @@ def test_nav_menu_standard_link(browser):
 def test_body_h1(browser):
     browser.get(url_for('data_registry', _external=True))
 
-    assert 'Which funders publish grants data openly?' in browser.find_element_by_tag_name('body').text
+    assert 'Which funders publish grants data openly WITH NO FEAR?' in browser.find_element_by_tag_name('body').text
 
 
 @pytest.mark.usefixtures('live_server')
