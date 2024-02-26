@@ -1,0 +1,36 @@
+name: Test
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+        architecture: x64
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ hashFiles('**/requirements_dev.txt') }}
+
+    - run: pip install -r requirements.txt
+    - run: pip install -r requirements_dev.txt
+
+    - run: ./registry/manage.py makemigrations --dry-run --check
+    - run: ./registry/manage.py migrate
+
+    - env:
+        SALESFORCE_USERNAME: ${{ secrets.SALESFORCE_USERNAME }}
+        SALESFORCE_PASSWORD: ${{ secrets.SALESFORCE_PASSWORD }}
+        SALESFORCE_SECURITY_TOKEN: ${{ secrets.SALESFORCE_SECURITY_TOKEN }}
+        # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # coveralls
+
+      run: ./registry/manage.py test -v 3 tests
+#- run: coverage run --source='./registry' ./registry/manage.py test -v 3 tests
+
+#    - env:
+ #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #    run: coveralls --service=github

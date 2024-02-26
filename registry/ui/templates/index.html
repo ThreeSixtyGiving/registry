@@ -1,0 +1,389 @@
+{% load static %}
+<!doctype html>
+<html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Data Registry | 360Giving</title>
+    <meta property="og:title" content="Data Registry | 360Giving">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static '/images/favicon/apple-icon-57x57.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static '/images/favicon/apple-icon-60x60.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static '/images/favicon/apple-icon-72x72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static '/images/favicon/apple-icon-76x76.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static '/images/favicon/apple-icon-114x114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static '/images/favicon/apple-icon-120x120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static '/images/favicon/apple-icon-144x144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static '/images/favicon/apple-icon-152x152.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static '/images/favicon/apple-icon-180x180.png' %}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{% static '/images/favicon/android-icon-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static '/images/favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static '/images/favicon/favicon-96x96.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static '/images/favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static '/images/favicon/manifest.json' %}" >
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="{% static '/images/favicon/ms-icon-144x144.png' %}">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="shortcut icon" href="{% static '/images/favicon/favicon.ico' %}" type="image/x-icon" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static '/css/sanitize.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&display=swap" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" type="text/css" />
+
+    <noscript>
+      <style>
+        .javascript-enabled {
+          display: none !important;
+        }
+      </style>
+    </noscript>
+  </head>
+
+
+
+
+  <body>
+    <div class="layout layout--single-column">
+      <div class="top-bar layout__nav">
+  <button class="top-bar__menu-trigger"><i class="material-icons">menu</i></button>
+
+  <nav class="top-bar__menu contextual-menu">
+
+    <a href="/" class="contextual-menu__button">Data Registry</a>
+
+    <a href="https://grantnav.threesixtygiving.org" class="contextual-menu__button">GrantNav</a>
+
+    <a href="https://www.threesixtygiving.org/terms-conditions/" class="contextual-menu__button">Terms</a>
+
+  </nav>
+
+  <div class="off-canvas-menu" aria-hidden>
+    <button class="off-canvas-menu__trigger"><i class="material-icons">close</i></button>
+
+    <nav>
+      <ul class="off-canvas-menu__list">
+
+        <li class="off-canvas-menu__item">
+            <a href="https://www.threesixtygiving.org/">360Giving</a>
+            <p>We help organisations publish open, standardised grants data, and empower people to use it to improve charitable giving.</p>
+        </li>
+
+        <li class="off-canvas-menu__item">
+            <a href="https://grantnav.threesixtygiving.org/">GrantNav</a>
+            <p>A search-engine for grants data. Explore and download in detail on where and how much funding goes across billions of pounds of grants.</p>
+        </li>
+
+        <li class="off-canvas-menu__item">
+            <a href="https://insights.threesixtygiving.org/">360Insights</a>
+            <p>A tool to combine and visualise 360Giving and charity data to understand funders better. You can explore funding across different areas – from grant dates to types of recipients.</p>
+        </li>
+
+        <li class="off-canvas-menu__item">
+            <a href="https://standard.threesixtygiving.org/">360Giving Data Standard</a>
+            <p>A uniform and consistent way to describe grants data. Publishing data in this standard format means it’s easier to find, understand and compare funding across the UK.</p>
+        </li>
+
+        <li class="off-canvas-menu__item">
+            <a href="https://registry.threesixtygiving.org/">Registry</a>
+            <p>A list of all the organisations that currently publish their grants data in the 360Giving Data Standard, with direct links to their data sources.</p>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</div>
+      <header class="layout__header">
+        <div class="hero-section">
+  <div class="wrapper">
+    <div class="hero hero--orange">
+      <!-- .hero--orange, .hero--yellow, .hero--red -->
+      <div class="hero__column hero__logo">
+        <a href="/"><img src="{% static '/images/360-logos/360giving-registry.svg' %}" alt="360 Data Registry"></a>
+      </div>
+      <div class="hero__column hero__lead">
+        <h2 class="hero__title">
+
+            Which funders publish grants data openly?
+
+        </h2>
+        <p class="hero__blurb">
+
+            Explore this list of organisations that publish to the 360Giving Data Standard and download the data.
+
+        </p>
+
+      </div>
+    </div>
+  </div>
+</div>
+      </header>
+
+      <main class="layout__content">
+        <div class="layout__content-inner">
+
+
+
+
+<article class="prose-section__main">
+  <div class="prose">
+    <section class="prose__section margin-bottom:2">
+        <p>
+          There are {{data|length}} datasets published in the 360Giving Data Standard.
+        </p>
+      <div class="box box--orange">
+        <p>
+          Looking to explore the grants data by location, sector or recipient? Head to
+          <a href="http://grantnav.threesixtygiving.org/" target="_blank">GrantNav</a>.
+        </p>
+      </div>
+        <p>
+          Looking to build tools or do research with the data?
+          <a href="https://www.threesixtygiving.org/data/using-360giving-data/#Registry_feed" target="_blank">Use our JSON feed</a>.
+        </p>
+        <p>
+          Want to publish your grants data openly with the 360Giving standard? Visit our
+          <a href="https://www.threesixtygiving.org/support/" target="_blank">support page</a> or
+          <a href="http://www.threesixtygiving.org/contact/" target="_blank">get in touch</a>.
+        </p>
+    </section>
+  </div>
+</article>
+
+<ul class="card-list">
+
+
+    {% for data in data %}
+
+    <li class="card-list__item" id="360G-10GM">
+      <article class="registry-card">
+        <div class="registry-card__pub-logo">
+          <a href="{{data.publisher.website}}" target="_blank">
+            <img src="{{data.publisher.logo}}" alt="{{data.publisher.name}}">
+          </a>
+        </div>
+        <div class="registry-card__content">
+          <h3 class="registry-card__pub-name">
+            {{data.publisher.name}}
+          </h3>
+
+          <ul class="registry-card__list">
+
+            <li class="registry-card__item ">
+              <table class="registry-grant">
+
+                {% for distribution in data.distribution %}
+                <tr class="registry-grant__line registry-grant--title-line">
+                  <td class="registry-grant__title" colspan="3">
+                    {{distribution.title}} <br />
+                    <a href="{{distribution.downloadURL}}">{{distribution.downloadURL}}</a> <br />
+                    Hosted at <br />
+                    <a href="{{distribution.accessURL}}">{{distribution.accessURL}}</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </table>
+
+            </li>
+
+            <li>
+              <table class="registry-grant">
+                <tr class="registry-grant__line registry-grant--data-line">
+                  <td>ID: <code>{{data.identifier}}</code></td>
+
+                  <td>Org-id: <code>{{data.publisher.org_id}}</code></td>
+                  <td>Prefix: <a
+                      href="https://qualitydashboard.threesixtygiving.org/publisher/{{data.publisher.prefix}}">{{data.publisher.prefix}}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Licence:
+                    <a href="{{data.license}}" target="_blank" title="{{license_name}}">{{data.license_name}}
+                      {% if license == 'https://creativecommons.org/licenses/by/4.0/' %}
+                      <img class="license license--cc" src="{% static '/images/licenses/creative-commons-main.svg' %}"
+                        alt="{{data.license_name}}">
+                      {% endif %}
+                    </a>
+                  </td>
+
+                  <td>Modified: {{data.modified}}</td>
+                  <td>Issued: {{data.issued}}</td>
+                </tr>
+
+              </table>
+
+            </li>
+          </ul>
+        </div>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+        </div>
+      </main>
+      <!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  var siteID = 21;
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['requireCookieConsent']); // Don't use cookies unless we have consent
+  _paq.push(['setCookieDomain', '*.threesixtygiving.org']);
+  _paq.push(['setDownloadExtensions', "json|csv|xlsx"]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="https://analytics.threesixtygiving.org/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    if(!siteID) throw new Error("siteID not set");
+    _paq.push(['setSiteId', siteID]);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+<script type="text/javascript">
+  function hideCookieConsentDialog(hide){
+    if (hide){
+      document.getElementsByClassName("cookie-consent")[0].style.setProperty("display", "none", "important");
+    } else {
+      document.getElementsByClassName("cookie-consent")[0].style.setProperty("display", "block", "important");
+    }
+  }
+
+  function noCookieConsent() {
+    document.cookie = "noEnhancedAnalytics=1 ;max-age=2592000 ;domain=threesixtygiving.org";
+  }
+
+
+  document.addEventListener('DOMContentLoaded', function(){
+    if (document.cookie.indexOf("mtm_cookie_consent") > -1 ||
+        document.cookie.indexOf("mtm_consent_removed") > -1 ||
+        document.cookie.indexOf("noEnhancedAnalytics") > -1) {
+      hideCookieConsentDialog(true);
+    } else {
+      hideCookieConsentDialog(false);
+    }
+  });
+</script>
+
+<div role="dialog" aria-labelledby="cookie-dialog-title" aria-describedby="cookie-dialog-desc">
+  <div class="base-card base-card--new cookie-consent">
+    <div class="base-card__content">
+      <h2 class="base-card__title" id="cookie-dialog-title">Allow analytics cookies? <br/>
+        <a class="base-card__text" href="https://www.threesixtygiving.org/privacy/"> More Information &amp; Privacy Policy</a>
+      </h2>
+      <p class="base-card__text">
+      <a href="#" onclick="_paq.push(['rememberCookieConsentGiven']); hideCookieConsentDialog(true);" class="button">Yes</a>
+      <a href="#" onclick="noCookieConsent(); hideCookieConsentDialog(true);" class="button">No</a>
+      <a href="#" onclick="_paq.push(['optUserOut']); hideCookieConsentDialog(true);" class="button">Disable Analytics</a>
+      </p>
+      <p id="cookie-dialog-desc" style="font-style: italic;">360Giving uses privacy-respecting analytics. If you don't accept cookies, we will track only basic information about your visit. Click "Disable Analytics" if you don't want us to track at all. </p>
+    </div>
+  </div>
+</div>
+      <footer class="layout__footer">
+        <div class="subscribe-section">
+  <div class="subscribe-section__wrapper">
+    <form action="https://threesixtygiving.us10.list-manage.com/subscribe" method="POST" class="subscribe-section__form">
+      <input type="hidden" name="u" value="216b8b926250184f90c7198e8">
+      <input type="hidden" name="id" value="91870dde44">
+      <input type="email" name="EMAIL" id="EMAIL" placeholder="Subscribe to our newsletter">
+      <input type="submit" value="Send">
+    </form>
+  </div>
+</div>
+        <footer class="footer">
+  <div class="footer__row wrapper">
+    <div class="footer__column-2 footer__branding">
+      <div class="footer__logo"><img src="/images/360-giving-logo-white.svg" alt="360Giving"></div>
+      <p class="footer__tagline">Open data for more effective grantmaking</p>
+    </div>
+    <div class="footer__column-1 footer__social">
+      <a href="https://github.com/threesixtygiving/" class="github-icon"><img src="/images/github-logo.svg" alt="Check our Github"></a>
+      <a href="https://twitter.com/360Giving/" class="twitter-icon"><img src="/images/twitter-logo.svg" alt="Follow us on Twitter"></a>
+    </div>
+  </div>
+
+  <div class="footer__row wrapper">
+    <div class="footer__column-1 footer__section medium-up">
+      <h3 class="footer__heading">For grantmakers</h3>
+      <ul>
+
+        <li><a href="https://www.threesixtygiving.org/support/why-publish-grants-data/">Why publish?</a></li>
+
+        <li><a href="https://www.threesixtygiving.org/support/standard/">The Data Standard</a></li>
+
+        <li><a href="https://www.threesixtygiving.org/about/datachampions/">Data Champions</a></li>
+
+        <li><a href="https://www.threesixtygiving.org/support/">Support</a></li>
+
+      </ul>
+    </div>
+
+    <div class="footer__column-1 footer__section medium-up">
+      <h3 class="footer__heading">Explore grants data</h3>
+      <ul>
+
+        <li><a href="https://grantnav.threesixtygiving.org/">GrantNav</a></li>
+
+        <li><a href="https://data.threesixtygiving.org/">Data Registry</a></li>
+
+        <li><a href="https://insights.threesixtygiving.org/">360Insights</a></li>
+
+        <li><a href="https://www.threesixtygiving.org/contact/">Contact</a></li>
+
+      </ul>
+    </div>
+
+
+    <div class="footer__column-2 footer__section">
+      <h3 class="footer__heading">360Giving</h3>
+      <p>We help organisations openly publish grants data, and help people use it to improve charitable giving.</p>
+    </div>
+
+  </div>
+
+  <div class="wrapper footer__small-print">
+    <!-- <a href="#" class="edit-github button button--small button--yellow">Edit on Github</a> -->
+    <p>© Copyright {{year_now}} 360Giving, licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</p>
+  </div>
+  <div class="footer__row wrapper footer__small-print">
+    <div class="footer__column-2">
+      <p>360Giving:
+        Company <a href="https://beta.companieshouse.gov.uk/company/09668396" target="_blank">09668396</a>
+        Charity <a href="http://beta.charitycommission.gov.uk/charity-details/?regid=1164883&subid=0" target="_blank">1164883</a>
+      </p>
+    </div>
+    <div class="footer__column-2 footer__policy-links">
+      <p>
+
+        <a href="https://www.threesixtygiving.org/privacy/">Privacy Notice</a> |
+
+        <a href="https://www.threesixtygiving.org/terms-conditions/">Terms &#038; Conditions</a> |
+
+        <a href="https://www.threesixtygiving.org/cookie-policy/">Cookie Policy</a> |
+
+        <a href="https://www.threesixtygiving.org/take-down-policy/">Take Down Policy</a> |
+
+        <a href="https://www.threesixtygiving.org/about/360giving-code-conduct/">Code of Conduct</a>
+
+      </p>
+    </div>
+    </div>
+    </footer>
+    </div>
+
+    </body>
+
+    </html>

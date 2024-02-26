@@ -1,0 +1,15 @@
+.DS_Store
+.idea/
+.pytest_cache/
+.ve/
+.vscode/
+*.sqlite3
+get-pip.py
+
+chromedriver/
+__pycache__/
+registry/__pycache__/
+tests/__pycache__/
+tests/samples/__pycache__/
+
+chromedriver_mac64.zip
