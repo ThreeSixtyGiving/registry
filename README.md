@@ -2,7 +2,7 @@
 
 ![360Giving registry logo](registry/static/images/360-logos/360giving-registry.svg)
 
-The [360Giving Registry](http://data.threesixtygiving.org) lists files that use the [360Giving Standard](http://standard.threesixtygiving.org). The list of files is maintained by 360Giving, and this repo contains the source code for the website that obtains the listing from 360Giving (via the Salesforce API) and presents it as a website. The live website is updated once a day from this repo, unless manually triggered.
+The [360Giving Registry](http://registry.threesixtygiving.org) lists files that use the [360Giving Standard](http://standard.threesixtygiving.org). The list of files is maintained by 360Giving, and this repo contains the source code for the website that obtains the listing from 360Giving (via the Salesforce API) and presents it as a website. The live website is updated once a day from this repo, unless manually triggered.
 
 To download all the files listed in the registy, the 360Giving [datagetter](https://github.com/ThreeSixtyGiving/datagetter) tool is available.
 
