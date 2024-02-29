@@ -29,7 +29,7 @@ SECRET_KEY = get_random_string(50, "abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["registry.threesixtygiving.org"]
 
 
 # Application definition

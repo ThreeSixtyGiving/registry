@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dokku": {
+      "postdeploy": "cp -a ./registry/static/* /registry_static/"
+    }
+  }
+}
