@@ -126,6 +126,8 @@ STATICFILES_DIRS = [
     BASE_DIR.joinpath("static"),
 ]
 
+STATIC_ROOT = "/registry_static/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
