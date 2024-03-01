@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 from django.utils.crypto import get_random_string
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +28,7 @@ SECRET_KEY = get_random_string(50, "abcdefghijklmnopqrstuvwxyz0123456789!@#%^&*(
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", False)
 
 ALLOWED_HOSTS = ["registry.threesixtygiving.org"]
 
