@@ -140,17 +140,18 @@
       <div class="box box--orange">
         <p>
           Looking to explore the grants data by location, sector or recipient? Head to
-          <a href="http://grantnav.threesixtygiving.org/" target="_blank">GrantNav</a>.
+          <a href="http://grantnav.threesixtygiving.org/">GrantNav</a>.
         </p>
       </div>
         <p>
-          Looking to build tools or do research with the data?
-          <a href="https://www.threesixtygiving.org/data/using-360giving-data/#Registry_feed" target="_blank">Use our JSON feed</a>.
+          <a href="https://www.threesixtygiving.org/data/using-360giving-data/">
+          Find out more about building tools or doing research with 360 Giving data.
+          </a>
         </p>
         <p>
           Want to publish your grants data openly with the 360Giving standard? Visit our
-          <a href="https://www.threesixtygiving.org/support/" target="_blank">support page</a> or
-          <a href="http://www.threesixtygiving.org/contact/" target="_blank">get in touch</a>.
+          <a href="https://www.threesixtygiving.org/support/">support page</a> or
+          <a href="http://www.threesixtygiving.org/contact/">get in touch</a>.
         </p>
     </section>
   </div>
@@ -164,7 +165,7 @@
     <li class="card-list__item" id="360G-10GM">
       <article class="registry-card">
         <div class="registry-card__pub-logo">
-          <a href="{{data.publisher.website}}" target="_blank">
+          <a href="{{data.publisher.website}}">
             <img src="{{data.publisher.logo}}" alt="{{data.publisher.name}}">
           </a>
         </div>
@@ -182,7 +183,7 @@
                 <tr class="registry-grant__line registry-grant--title-line">
                   <td class="registry-grant__title" colspan="3">
                     {{distribution.title}} <br />
-                    <a href="{{distribution.downloadURL}}">{{distribution.downloadURL}}</a> <br />
+                    <a href="{{distribution.downloadURL}}">{{distribution.downloadURL}}</a> <br /> <br />
                     Available at <br />
                     <a href="{{distribution.accessURL}}">{{distribution.accessURL}}</a>
                   </td>
@@ -205,7 +206,7 @@
                 <tr>
                   <td>
                     Licence:
-                    <a href="{{data.license}}" target="_blank" title="{{license_name}}">{{data.license_name}}
+                    <a href="{{data.license}}" title="{{license_name}}">{{data.license_name}}
                       {% if license == 'https://creativecommons.org/licenses/by/4.0/' %}
                       <img class="license license--cc" src="{% static '/images/licenses/creative-commons-main.svg' %}"
                         alt="{{data.license_name}}">
@@ -356,13 +357,13 @@
 
   <div class="wrapper footer__small-print">
     <!-- <a href="#" class="edit-github button button--small button--yellow">Edit on Github</a> -->
-    <p>© Copyright {{year_now}} 360Giving, licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</p>
+    <p>© Copyright {{year_now}} 360Giving, licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" >Creative Commons Attribution 4.0 International License</a>.</p>
   </div>
   <div class="footer__row wrapper footer__small-print">
     <div class="footer__column-2">
       <p>360Giving:
-        Company <a href="https://beta.companieshouse.gov.uk/company/09668396" target="_blank">09668396</a>
-        Charity <a href="http://beta.charitycommission.gov.uk/charity-details/?regid=1164883&subid=0" target="_blank">1164883</a>
+        Company <a href="https://beta.companieshouse.gov.uk/company/09668396">09668396</a>
+        Charity <a href="http://beta.charitycommission.gov.uk/charity-details/?regid=1164883&subid=0">1164883</a>
       </p>
     </div>
     <div class="footer__column-2 footer__policy-links">
