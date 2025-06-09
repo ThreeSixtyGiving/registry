@@ -18,7 +18,7 @@ $ pip install -r requirements_dev.txt
 
 Development server
 ```
-$ ./registry/manage.py runserver
+$ DJANGO_SETTINGS_MODULE=settings.settings_dev ./registry/manage.py runserver
 ```
 
 ## Tests
