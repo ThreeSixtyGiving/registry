@@ -263,7 +263,7 @@
   }
 
   function noCookieConsent() {
-    document.cookie = "noEnhancedAnalytics=1 ;max-age=2592000 ;domain=threesixtygiving.org";
+    document.cookie = "noEnhancedAnalytics=1; max-age=2592000; domain=threesixtygiving.org";
   }
 
 
@@ -307,12 +307,12 @@
         <footer class="footer">
   <div class="footer__row wrapper">
     <div class="footer__column-2 footer__branding">
-      <div class="footer__logo"><img src="/images/360-giving-logo-white.svg" alt="360Giving"></div>
+      <div class="footer__logo"><img src="{% static "/images/360-giving-logo-white.svg" %}" alt="360Giving"></div>
       <p class="footer__tagline">Open data for more effective grantmaking</p>
     </div>
     <div class="footer__column-1 footer__social">
-      <a href="https://github.com/threesixtygiving/" class="github-icon"><img src="/images/github-logo.svg" alt="Check our Github"></a>
-      <a href="https://twitter.com/360Giving/" class="twitter-icon"><img src="/images/twitter-logo.svg" alt="Follow us on Twitter"></a>
+      <a href="https://www.linkedin.com/company/360giving/" class="linkedin-icon"><img src="{% static "/images/linkedin-logo.svg" %}" alt="Find us on LinkedIn"></a>
+      <a href="https://github.com/threesixtygiving/" class="github-icon"><img src="{% static "/images/github-logo.svg" %}" alt="Check our Github"></a>
     </div>
   </div>
 
@@ -338,7 +338,7 @@
 
         <li><a href="https://grantnav.threesixtygiving.org/">GrantNav</a></li>
 
-        <li><a href="https://data.threesixtygiving.org/">Data Registry</a></li>
+        <li><a href="https://qualitydashboard.threesixtygiving.org/">Quality Dashboard</a></li>
 
         <li><a href="https://insights.threesixtygiving.org/">360Insights</a></li>
 
@@ -357,13 +357,13 @@
 
   <div class="wrapper footer__small-print">
     <!-- <a href="#" class="edit-github button button--small button--yellow">Edit on Github</a> -->
-    <p>© Copyright {{year_now}} 360Giving, licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" >Creative Commons Attribution 4.0 International License</a>.</p>
+    <p>&copy; Copyright {{year_now}} 360Giving, licensed under a <a href="https://creativecommons.org/licenses/by/4.0/" >Creative Commons Attribution 4.0 International License</a>.</p>
   </div>
   <div class="footer__row wrapper footer__small-print">
     <div class="footer__column-2">
       <p>360Giving:
-        Company <a href="https://beta.companieshouse.gov.uk/company/09668396">09668396</a>
-        Charity <a href="http://beta.charitycommission.gov.uk/charity-details/?regid=1164883&subid=0">1164883</a>
+        Company <a href="https://find-and-update.company-information.service.gov.uk/company/09668396">09668396</a>
+        Charity <a href="https://register-of-charities.charitycommission.gov.uk/charity-details/?regId=1164883&subId=0">1164883</a>
       </p>
     </div>
     <div class="footer__column-2 footer__policy-links">
