@@ -38,6 +38,7 @@ def get_output_dataset(dataset):
         "issued": dataset["dateFirstPublished"],
         "modified": dataset["lastModifiedDate"],
         "publisher": {
+            "identifier": publisher["id"],
             "name": publisher["name"],
             "website": publisher["website"] if publisher["website"] else "",
             "logo": publisher["logo"] if publisher["logo"] else "",
