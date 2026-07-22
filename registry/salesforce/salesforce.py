@@ -5,10 +5,9 @@ from simple_salesforce import Salesforce
 
 def get_salesforce_access():
     return Salesforce(
-        username=os.environ["SALESFORCE_USERNAME"],
-        password=os.environ["SALESFORCE_PASSWORD"],
-        security_token=os.environ["SALESFORCE_SECURITY_TOKEN"],
-        domain=os.environ.get("SALESFORCE_DOMAIN"),
+        consumer_key=os.environ["SALESFORCE_CONSUMER_KEY"],
+        consumer_secret=os.environ["SALESFORCE_CONSUMER_SECRET"],
+        domain=os.environ["SALESFORCE_DOMAIN"],
     )
 
 
