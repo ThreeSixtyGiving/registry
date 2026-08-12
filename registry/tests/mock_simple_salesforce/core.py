@@ -5,7 +5,6 @@ import sqlite3
 import string
 from typing import Any
 
-
 sqlite3.register_adapter(datetime, lambda x: int(x.timestamp()))
 
 
