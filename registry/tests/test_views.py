@@ -1,8 +1,38 @@
+from unittest.mock import patch
+
 from django.test import LiveServerTestCase
 from django.urls import reverse_lazy
+from tests.mock_simple_salesforce.threesixty import MockSimpleSalesforce360Giving
+
+NUM_DATASETS = 51
+NUM_DATASETS_NOT_APPROVED = 1
+NUM_DATASETS_APPROVED = NUM_DATASETS - NUM_DATASETS_NOT_APPROVED
+NUM_ORGANISATIONS = 11
+NUM_ORGANISATIONS_NO_PREFIX = 1
+NUM_ORGANISATIONS_WITH_PREFIX = NUM_ORGANISATIONS - NUM_ORGANISATIONS_NO_PREFIX
 
 
 class TestViewsRespond(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.mock_sf = MockSimpleSalesforce360Giving()
+        cls.mock_sf.init_mock_registry(
+            NUM_ORGANISATIONS,
+            NUM_DATASETS,
+            num_accounts_no_prefix=NUM_ORGANISATIONS_NO_PREFIX,
+            num_datasets_not_approved=NUM_DATASETS_NOT_APPROVED,
+        )
+        cls.patcher = patch(
+            "salesforce.salesforce.get_salesforce_access", return_value=cls.mock_sf
+        )
+        cls.patcher.start()
+        super().setUpClass()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.patcher.stop()
+
     def test_views(self):
         urls = [
             reverse_lazy("ui:index"),
@@ -20,8 +50,7 @@ class TestViewsRespond(LiveServerTestCase):
         response = self.client.get(reverse_lazy("data"))
         data = response.json()
 
-        # There are currently 601 datasets 28/02/2024
-        self.assertTrue(len(data) > 600)
+        self.assertTrue(len(data) == NUM_DATASETS_APPROVED)
 
         # Check these keys are in at least the first item
         for key in [
