@@ -5,7 +5,27 @@ import sqlite3
 import string
 from typing import Any
 
+from tests.mock_simple_salesforce import soql
+
 sqlite3.register_adapter(datetime, lambda x: int(x.timestamp()))
+
+
+def _make_object_url(sobject: str, record_id: str) -> str:
+    """Make the Salesforce object URL
+
+    Parameters
+    ----------
+    sobject : str
+        Salesforce object name.
+    record_id : str
+        Salesforce record id.
+
+    Returns
+    -------
+    str
+    """
+
+    return f"/services/data/v57.0/sobjects/{sobject}/{record_id}"
 
 
 class MockSimpleSalesforce:
@@ -150,3 +170,71 @@ class MockSimpleSalesforce:
         )
 
         return sfid
+
+    def query_all(self, soql_query: str) -> OrderedDict:
+        """Run a query on the in-memory database and return the results.
+
+        Parameters
+        ----------
+        soql_query : str
+            Salesforce Object Query Language query string.
+
+        Returns
+        -------
+        OrderedDict
+        """
+
+        # Convert the query to SQLite and the run the resulting query on the database.
+        query = soql.convert_soql_to_sqlite(soql_query)
+        cur = self.con.cursor()
+        res = cur.execute(query.sql)
+
+        records = []
+
+        for row in res.fetchall():
+            record_id = row[query.fields[query.sobject + ".Id"]]
+
+            record = OrderedDict()
+            record["attributes"] = OrderedDict(
+                {
+                    "type": query.sobject,
+                    "url": _make_object_url(query.sobject, record_id),
+                }
+            )
+
+            # For each field we see if this is a field in the main query sobject, if it
+            # is we just add the field to the record.  If it's a related record then we
+            # create the sub-object for the related table and add the field there.
+            for field in query.fields:
+                related, field_name = field.split(".")
+                if related == query.sobject:
+                    record[field_name] = row[query.fields[field]]
+
+                else:
+                    if related[-3:] == "__c":
+                        related_table = related[:-3] + "__r"
+                    else:
+                        related_table = related + "__r"
+
+                    # If the related object is not yet in the record then create it.
+                    if related_table not in record:
+                        related_table_id = row[query.fields[related + ".Id"]]
+                        record[related_table] = OrderedDict(
+                            {
+                                "attributes": OrderedDict(
+                                    {
+                                        "type": related,
+                                        "url": _make_object_url(
+                                            related, related_table_id
+                                        ),
+                                    }
+                                )
+                            }
+                        )
+
+                    # Add the field to the related object.
+                    record[related_table][field_name] = row[query.fields[field]]
+
+            records.append(record)
+
+        return {"records": records, "totalSize": len(records), "done": True}
