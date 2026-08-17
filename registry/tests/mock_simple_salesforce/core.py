@@ -90,7 +90,6 @@ class MockSimpleSalesforce:
             + [rel + "__r" for rel in related]
         )
         sql += ");"
-        cur = self.con.cursor()
         cur.execute(sql)
         self.con.commit()
 
@@ -111,12 +110,14 @@ class MockSimpleSalesforce:
 
         Raises
         ------
-        Exception
+        ValueError
             If the caller provides an Id, rather than letting this method create a random id.
         """
 
         if "Id" in data:
-            raise Exception
+            raise ValueError(
+                "Record ids should be created automatically rather than set by the caller"
+            )
 
         field_names = ["Id"] + list(data.keys())
 
@@ -237,4 +238,6 @@ class MockSimpleSalesforce:
 
             records.append(record)
 
-        return {"records": records, "totalSize": len(records), "done": True}
+        return OrderedDict(
+            {"records": records, "totalSize": len(records), "done": True}
+        )
