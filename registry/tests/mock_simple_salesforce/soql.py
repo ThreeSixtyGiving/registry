@@ -88,7 +88,7 @@ def parse_field_name(field_name_from_query: str, sobject: str) -> ParsedFieldNam
 ConvertedQuery = namedtuple("ConvertedQuery", ["sql", "sobject", "joins", "fields"])
 
 
-def convert_soql_to_sqlite(soql_query: str) -> str:
+def convert_soql_to_sqlite(soql_query: str) -> ConvertedQuery:
     """Parse Salesforce Object Query Language query and convert into an SQLite query
 
     Only select queries are supported.
@@ -100,17 +100,20 @@ def convert_soql_to_sqlite(soql_query: str) -> str:
 
     Returns
     -------
-    str
+    ConvertedQuery
 
     Raises
     ------
-    Exception
+    ValueError
+        If a non-SELECT query is passed.
     """
 
     # Parse the query and check we can convert it.
     parsed_query = python_soql_parser.parse(soql_query)
     if parsed_query[0] != "select":
-        raise Exception()
+        raise ValueError(
+            "Only SELECT queries can be parsed by the SimpleSalesforce mock"
+        )
 
     # We need to do three things: find all the tables we need to JOIN, sort out
     # join ids, correct the field names by adding/changing table prefixes.
