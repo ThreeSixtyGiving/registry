@@ -2,6 +2,7 @@
 .idea/
 .pytest_cache/
 .ve/
+.env
 .vscode/
 *.sqlite3
 get-pip.py
