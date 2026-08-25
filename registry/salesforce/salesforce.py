@@ -114,3 +114,36 @@ def get_salesforce_publishers():
         }
 
     return publishers
+
+
+def get_salesforce_funders():
+    salesforce = get_salesforce_access()
+    sf_query = """
+        SELECT
+            Id,
+            Publisher_Prefix_Combined__c,
+            prefix__c,
+            Publisher_Prefix__c,
+            Org_Case_Safe_ID__c,
+            X360Giving_Publisher__c,
+            Org_Identifier__c,
+            Name,
+            Sectors__c,
+            Sector_Organisation_type__c,
+            Sector_Organisation_sub_type__c,
+            Authorised_Domain__c,
+            Self_registration_enabled__c,
+            First_Published_Date__c,
+            Latest_Published_Date__c,
+            Update_schedule__c,
+            Update_Method__c
+        FROM Account
+        WHERE
+            X360Giving_Publisher__c = 'Funder in GrantNav'
+            OR X360Giving_Publisher__c = '360Giving Publisher'
+    """
+
+    sf_data = salesforce.query_all(sf_query)
+    funders = {funder["Id"]: clean_object(funder) for funder in sf_data["records"]}
+
+    return funders

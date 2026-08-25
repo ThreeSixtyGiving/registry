@@ -16,6 +16,13 @@ $ pip install -r requirements_dev.txt
 
 ## Run
 
+Export the following environment variables:
+```
+export SALESFORCE_CONSUMER_KEY=
+export SALESFORCE_CONSUMER_SECRET=
+export SALESFORCE_DOMAIN=
+```
+
 Development server
 ```
 $ DJANGO_SETTINGS_MODULE=settings.settings_dev ./registry/manage.py runserver
