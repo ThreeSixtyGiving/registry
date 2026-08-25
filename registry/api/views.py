@@ -12,3 +12,8 @@ class DataView(View):
 class PublishersView(View):
     def get(self, *args, **kwargs):
         return JsonResponse(salesforce.get_salesforce_publishers(), safe=False)
+
+
+class FundersView(View):
+    def get(self, *args, **kwargs):
+        return JsonResponse(salesforce.get_salesforce_funders(), safe=False)

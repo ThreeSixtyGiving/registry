@@ -16,11 +16,12 @@ Including another URLconf
 """
 
 from django.urls import path, include
-from api.views import DataView, PublishersView
+from api.views import DataView, FundersView, PublishersView
 
 urlpatterns = [
     path("", include("ui.urls", namespace="ui"), name="ui_index"),
     # These aren't namespaced for historical reasons
     path("data.json", DataView.as_view(), name="data"),
+    path("funders.json", FundersView.as_view(), name="funders"),
     path("publishers.json", PublishersView.as_view(), name="publishers"),
 ]
