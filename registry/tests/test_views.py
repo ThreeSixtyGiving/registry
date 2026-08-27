@@ -38,6 +38,7 @@ class TestViewsRespond(LiveServerTestCase):
             reverse_lazy("ui:index"),
             reverse_lazy("data"),
             reverse_lazy("publishers"),
+            reverse_lazy("funders"),
         ]
 
         for url in urls:
@@ -65,3 +66,47 @@ class TestViewsRespond(LiveServerTestCase):
             "distribution",
         ]:
             self.assertIn(key, data[0].keys())
+
+    def test_funders_json(self):
+        response = self.client.get(reverse_lazy("funders"))
+        data = response.json()
+
+        cur = self.mock_sf.con.cursor()
+        expected_ids = [
+            row[0]
+            for row in cur.execute(
+                "SELECT Id FROM Account WHERE "
+                "X360Giving_Publisher__c = 'Funder in GrantNav' "
+                "OR X360Giving_Publisher__c = '360Giving Publisher';"
+            ).fetchall()
+        ]
+
+        self.assertEqual(sorted(data.keys()), sorted(expected_ids))
+
+        for account_id, funder in data.items():
+            self.assertEqual(funder["id"], account_id)
+            self.assertIn(
+                funder["x360GivingPublisher"],
+                ["Funder in GrantNav", "360Giving Publisher"],
+            )
+            for key in ["name", "prefix", "orgIdentifier"]:
+                self.assertIn(key, funder.keys())
+
+    def test_funders_json_excludes_non_funders(self):
+        response = self.client.get(reverse_lazy("funders"))
+        data = response.json()
+
+        cur = self.mock_sf.con.cursor()
+        excluded_ids = [
+            row[0]
+            for row in cur.execute(
+                "SELECT Id FROM Account WHERE "
+                "X360Giving_Publisher__c IS NULL "
+                "OR (X360Giving_Publisher__c != 'Funder in GrantNav' "
+                "AND X360Giving_Publisher__c != '360Giving Publisher');"
+            ).fetchall()
+        ]
+
+        self.assertTrue(len(excluded_ids) > 0)
+        for account_id in excluded_ids:
+            self.assertNotIn(account_id, data.keys())
