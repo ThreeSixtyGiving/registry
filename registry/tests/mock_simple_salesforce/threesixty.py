@@ -93,6 +93,13 @@ class MockSimpleSalesforce360Giving(MockSimpleSalesforce):
         },
     ]
 
+    FUNDER_STATUSES = [
+        "Funder in GrantNav",
+        "360Giving Publisher",
+        "Something else",
+        None,
+    ]
+
     def __init__(self, **kwargs) -> None:
         """Initialise a Mock SimpleSalesforce object setup to represent the 360 Registry
 
@@ -110,6 +117,17 @@ class MockSimpleSalesforce360Giving(MockSimpleSalesforce):
                 "Authorised_Domain",
                 "Self_registration_enabled",
                 "Last_published_date",
+                "Publisher_Prefix_Combined",
+                "Publisher_Prefix",
+                "Org_Case_Safe_ID",
+                "X360Giving_Publisher",
+                "Sectors",
+                "Sector_Organisation_type",
+                "Sector_Organisation_sub_type",
+                "First_Published_Date",
+                "Latest_Published_Date",
+                "Update_schedule",
+                "Update_Method",
             ]
         )
 
@@ -181,21 +199,31 @@ class MockSimpleSalesforce360Giving(MockSimpleSalesforce):
                 else None
             )
             base_url = random_invalid_base_url(self.rnd)
+            prefix = f"360G-CT{index+1}" if index > (num_with_no_prefix - 1) else None
             self.create_record(
                 "Account",
                 {
                     "Name": f"Charitable Trust {index+1}",
                     "Logo__c": logo,
                     "Website": base_url + "index.html",
-                    "prefix__c": (
-                        f"360G-CT{index+1}"
-                        if index > (num_with_no_prefix - 1)
-                        else None
-                    ),
+                    "prefix__c": prefix,
                     "Org_Identifier__c": random_orgid(self.rnd),
                     "Authorised_Domain__c": base_url,
                     "Self_registration_enabled__c": False,
                     "Last_published_date__c": datetime(1900, 1, 1, 0, 0, 0),
+                    "Publisher_Prefix_Combined__c": prefix,
+                    "Publisher_Prefix__c": prefix,
+                    "Org_Case_Safe_ID__c": f"case-safe-{index+1}",
+                    "X360Giving_Publisher__c": self.FUNDER_STATUSES[
+                        index % len(self.FUNDER_STATUSES)
+                    ],
+                    "Sectors__c": "Health",
+                    "Sector_Organisation_type__c": "Charity",
+                    "Sector_Organisation_sub_type__c": "Grant-maker",
+                    "First_Published_Date__c": datetime(2017, 1, 1, 0, 0, 0),
+                    "Latest_Published_Date__c": datetime(1900, 1, 1, 0, 0, 0),
+                    "Update_schedule__c": "Quarterly",
+                    "Update_Method__c": "API",
                 },
             )
 
