@@ -1,0 +1,14 @@
+title = "360giving/registry betterleaks config"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "salesforce-hardcoded-credentials"
+description = "Hardcoded Salesforce consumer_key/consumer_secret/domain in a Salesforce(...) call instead of an os.environ[...] lookup."
+regex = '''(?i)Salesforce\((?:.|[\n\r]){0,200}?(?:consumer_key|consumer_secret|domain)\s*=\s*(?:"([^"\n]{3,200})"|'([^'\n]{3,200})')'''
+keywords = ["salesforce"]
+confidence = "high"
+filter = '''
+filter.containsAny(finding["secret"], ["CHANGEME", "YOUR_", "xxx", "XXXX", "example", "EXAMPLE", "TODO", "<"])
+'''
