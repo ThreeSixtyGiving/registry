@@ -16,6 +16,8 @@ certifi==2026.7.22
     # via requests
 cffi==2.1.1
     # via cryptography
+cfgv==3.5.0
+    # via pre-commit
 charset-normalizer==3.4.9
     # via requests
 click==8.4.2
@@ -24,12 +26,20 @@ click==8.4.2
     #   pip-tools
 cryptography==50.0.0
     # via pyjwt
+distlib==0.4.3
+    # via virtualenv
 django==6.1
     # via -r requirements.in
+filelock==4.0.8
+    # via
+    #   python-discovery
+    #   virtualenv
 flake8==7.3.0
     # via -r requirements_dev.in
 gunicorn==26.0.0
     # via -r requirements.in
+identify==2.6.20
+    # via pre-commit
 idna==3.18
     # via requests
 isodate==0.7.2
@@ -42,11 +52,14 @@ more-itertools==11.1.0
     # via simple-salesforce
 mypy-extensions==1.1.0
     # via black
+nodeenv==1.11.0
+    # via pre-commit
 packaging==26.3
     # via
     #   black
     #   build
     #   gunicorn
+    #   virtualenv
     #   wheel
 pathspec==1.1.1
     # via black
@@ -55,7 +68,10 @@ pip-tools==7.6.1
 platformdirs==4.11.2
     # via
     #   black
+    #   virtualenv
     #   zeep
+pre-commit==4.6.2
+    # via -r requirements_dev.in
 pycodestyle==2.14.0
     # via flake8
 pycparser==3.0
@@ -70,10 +86,14 @@ pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
+python-discovery==1.6.1
+    # via virtualenv
 python-soql-parser==0.2.0
     # via -r requirements_dev.in
 pytokens==0.4.1
     # via black
+pyyaml==6.0.3
+    # via pre-commit
 requests==2.34.2
     # via
     #   requests-file
@@ -92,6 +112,8 @@ typing-extensions==4.16.0
     # via simple-salesforce
 urllib3==2.7.0
     # via requests
+virtualenv==21.14.2
+    # via pre-commit
 wheel==0.48.0
     # via pip-tools
 zeep==4.3.3
