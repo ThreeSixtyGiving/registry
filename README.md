@@ -33,6 +33,13 @@ $ DJANGO_SETTINGS_MODULE=settings.settings_dev ./registry/manage.py runserver
 $ ./registry/manage.py test tests
 ```
 
+## Pre-commit hooks
+
+This repo scans commits for secrets with [betterleaks](https://github.com/betterleaks/betterleaks). Install [pre-commit](https://pre-commit.com/#install) and [betterleaks](https://github.com/betterleaks/betterleaks#installation), then:
+```
+$ pre-commit install
+```
+
 ## Update requirements
 
 ```

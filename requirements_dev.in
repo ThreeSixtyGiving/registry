@@ -1,5 +1,6 @@
 -r requirements.in
 black
 flake8
+pre-commit
 pip-tools
 python-soql-parser
