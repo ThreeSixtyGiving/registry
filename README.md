@@ -11,6 +11,7 @@ To download all the files listed in the registy, the 360Giving [datagetter](http
 ```
 $ python3 -m venv .ve
 $ source .ve/bin/activate
+$ pip install --upgrade pip
 $ pip install -r requirements_dev.txt
 ```
 

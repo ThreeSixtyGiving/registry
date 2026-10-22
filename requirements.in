@@ -1,3 +1,5 @@
 django>=6.1,<7.0
 simple_salesforce
 gunicorn
+
+certifi>=2026.10.19         # Response to eMudhra/emSign CA certificate security incident.
